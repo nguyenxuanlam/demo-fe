@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>Fire base Client</h2>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js"></script>
+
+   <script>
+    // Initialize Firebase
+    const firebaseConfig = {
+    apiKey: "AIzaSyA4a0eZTdRiVAelywN5c6VJBDDovJTg9j4",
+    authDomain: "nutriasia-5ee8f.firebaseapp.com",
+    projectId: "nutriasia-5ee8f",
+    storageBucket: "nutriasia-5ee8f.appspot.com",
+    messagingSenderId: "804436261156",
+    appId: "1:804436261156:web:e825e3981a44833190dbb1",
+    measurementId: "G-6FZBCWVBM7"
+  };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const messaging = firebase.messaging();
+
+    function InitializeFirebaseMessaging(){
+        messaging
+            .requestPermission()
+            .then(function (){
+                console.log('Notification Permission')
+                return messaging.getToken()
+            })
+            .then(function (token){
+                console.log("TOKEN :"+token)
+            })
+            .catch(function (reason){
+                console.log(reason)
+            })
+    }
+    messaging.onMessage(function (payload){
+        console.log(JSON.stringify(payload))
+        const notificationOptions = {
+            body:payload.data.text
+        };
+        if(Notification.permission == "granted"){
+            let notification = new Notification(payload.data.title,notificationOptions)
+        }
+    })
+    messaging.onTokenRefresh(function (){
+        messaging.getToken()
+            .then(function (newToken){
+                console.log("new token "+newToken )
+            })
+            .catch(function (reason){
+                console.log(reason)
+            })
+    })
+    InitializeFirebaseMessaging()
+
+   </script>
+</html>
